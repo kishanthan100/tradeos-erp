@@ -31,6 +31,7 @@ frontend/ecommerce/build/
 # Frontend local env keys (if any)
 frontend/ecommerce/.env.local
 frontend/ecommerce/.env.*.local
+frontend/ecommerce/.env.development
 
 
 # ==========================================
