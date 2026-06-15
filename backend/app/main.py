@@ -4,6 +4,7 @@ from sqlalchemy import text
 from app.db.session import AsyncSessionLocal
 from app.api.endpoints.customer import customer_route
 from app.api.endpoints.stock import stock_route
+from app.api.endpoints.user import user_route
 from fastapi.middleware.cors import CORSMiddleware
 
 
@@ -18,6 +19,7 @@ app.add_middleware(
 
 app.include_router(customer_route.router)
 app.include_router(stock_route.router)
+app.include_router(user_route.router)
 
 
 
