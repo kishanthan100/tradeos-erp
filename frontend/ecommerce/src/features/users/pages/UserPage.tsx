@@ -1,14 +1,15 @@
 import { useState } from "react";
-import { useCustomer, useCreateCustomer, useGetAddress } from "@/features/customers/hooks/useCustomer";
-import type { CreateCustomerPayload } from "../services/customer.api";
+
+import { UseUser, useCreateUser } from "../hooks/useUsers";
+import type { CreateUserPayload } from "../services/user.api";
 
 
-const empty: CreateCustomerPayload = {
+const empty: CreateUserPayload = {
   name: "",
   email: "",
-  contact_no: "",
+  role: "",
   is_active: true,
-  address_id: ""
+  password: ""
 }
 
 
@@ -19,15 +20,15 @@ function formatDate(iso: string) {
 }
 
 
-export default function CustomerPage() {
-  const { data, isLoading, error } = useCustomer();
-  const { mutate: createCustomer, isPending } = useCreateCustomer();
-  const {data: address} = useGetAddress()
+export default function UserPage() {
+  const { data, isLoading, error } = UseUser();
+  const { mutate: createUser, isPending } = useCreateUser();
+  
   
   const [showForm, setShowForm]       = useState(false);
   const [showConfirm, setShowConfirm] = useState(false);
-  const [form, setForm]               = useState<CreateCustomerPayload>(empty);
-  
+  const [form, setForm]               = useState<CreateUserPayload>(empty);
+  const [showPassword, setShowPassword] = useState(false);
     
   
   function handleChange(e: React.ChangeEvent<HTMLInputElement>) {
@@ -40,7 +41,7 @@ export default function CustomerPage() {
     }
 
     function handleSubmit() {
-      createCustomer(form, {
+      createUser(form, {
         onSuccess: () => {
           // reset everything
           setForm(empty);
@@ -64,19 +65,19 @@ return (
       <div className="flex items-center justify-between mb-6">
         <div>
           <h1 className="text-lg font-medium text-gray-900 flex items-center gap-2">
-            Customers
+            Users
             <span className="text-xs font-medium bg-gray-100 text-gray-500 px-2.5 py-0.5 rounded-full">
               {data?.length ?? 0}
             </span>
           </h1>
-          <p className="text-sm text-gray-500 mt-0.5">Manage your saved customers</p>
+          <p className="text-sm text-gray-500 mt-0.5">Manage your saved useUsers</p>
         </div>
           {!showForm && (
           <button
             onClick={() => setShowForm(true)}
             className="flex items-center gap-1.5 text-sm font-medium bg-gray-900 text-white px-3.5 py-2 rounded-lg hover:bg-gray-700 transition-colors"
           >
-            + Add Customer
+            + Add User
           </button>
         )}
       </div>
@@ -84,7 +85,7 @@ return (
        {/* Form card */}
       {showForm && !showConfirm && (
         <div className="bg-white border border-gray-200 rounded-xl p-5 mb-6">
-          <h2 className="text-sm font-medium text-gray-900 mb-4">New Customer</h2>
+          <h2 className="text-sm font-medium text-gray-900 mb-4">New User</h2>
 
           <div className="grid grid-cols-2 gap-4 mb-4">
             <div>
@@ -108,32 +109,45 @@ return (
               />
             </div>
             <div>
-              <label className="block text-xs text-gray-500 mb-1">Contact NO</label>
-              <input
-                name="contact_no"
-                value={form.contact_no}
-                onChange={handleChange}
-                placeholder="077 xxx xxx xx"
-                className="w-full border border-gray-200 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-gray-900"
-              />
+              <label className="block text-xs text-gray-500 mb-1">Role</label>
+              <select
+                name="role" 
+                value={form.role} 
+                onChange={(e) => setForm((prev) => ({ ...prev, role: e.target.value }))}
+                className="w-full border border-gray-200 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-gray-900 bg-white"
+              >
+                <option value="" disabled>Select a role</option>
+                <option value="admin">Admin</option>
+                <option value="staff">Staff</option>
+              </select>
             </div>
             
             
             <div>
-              <label className="block text-xs text-gray-500 mb-1">Address ID</label>
-              <select
-                name="category_id"
-                value={form.address_id}
-                onChange={(e) => setForm((prev) => ({ ...prev, address_id: e.target.value }))}
-                className="w-full border border-gray-200 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-gray-900"
-              >
-                <option value="">Select a Address ID</option>
-                {address?.map((addr) => (
-                  <option key={addr.id} value={addr.id}>
-                    {addr.created_at}            
-                  </option>                
-                ))}
-              </select>
+              <label className="block text-xs text-gray-500 mb-1">Password</label>
+              <div className="relative">
+                <input
+                  type={showPassword ? "text" : "password"} // Dynamically changes type
+                  name="password"
+                  value={form.password}
+                  onChange={handleChange}
+                  placeholder="*********"
+                  className="w-full border border-gray-200 rounded-lg pl-3 pr-10 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-gray-900"
+                />
+                <button
+                  type="button" // Prevents the button from accidentally submitting a form
+                  onClick={() => setShowPassword(!showPassword)}
+                  className="absolute inset-y-0 right-0 pr-3 flex items-center text-xs text-gray-500 hover:text-gray-800 focus:outline-none"
+                >
+                  {showPassword ? (
+                    // "Hide" text or an Eye-Off icon
+                    <span>Hide</span>
+                  ) : (
+                    // "Show" text or an Eye icon
+                    <span>Show</span>
+                  )}
+                </button>
+              </div>
             </div>
             
             
@@ -166,9 +180,9 @@ return (
             {[
               { label: "Name",    value: form.name },
               { label: "E-mail",     value: form.email },
-              { label: "Contact NO", value: form.contact_no },
+              { label: "Role", value: form.role },
               { label: "Is Active", value: form.is_active },
-              { label: "Address ID", value: form.address_id },
+              { label: "Password", value: form.password },
             ].map(({ label, value }) => (
               <div key={label} className="flex justify-between px-4 py-2.5 text-sm">
                 <span className="text-gray-400">{label}</span>
@@ -233,8 +247,9 @@ return (
                     Active
                   </span>
                 </td>
-                <td className="px-4 py-3 text-gray-400 text-xs">{customer.contact_no}</td>
+                <td className="px-4 py-3 text-gray-400 text-xs">{customer.role}</td>
                 <td className="px-4 py-3 text-gray-400 text-xs">{formatDate(customer.created_at)}</td>
+                
                 <td className="px-4 py-3">
                   <button className="text-xs text-gray-500 border border-gray-200 rounded-md px-2.5 py-1.5 hover:bg-gray-100 transition-colors">
                     Edit
