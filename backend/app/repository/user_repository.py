@@ -14,7 +14,7 @@ class UserRepository:
         result = await self.db.execute(select(Users))
         return list(result.scalars().all())
 
-    async def get_by_mail(self, email: str) -> list[Users]:
+    async def get_by_mail(self, email: str) -> Users:
         result = await self.db.execute(select(Users).where(Users.email == email))
         return list(result.scalars().all())
 

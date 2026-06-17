@@ -3,6 +3,7 @@ from app.model.users_model import Users
 from app.repository.user_repository import UserRepository
 from fastapi import HTTPException, status
 from app.schema.user_schema import CreateUsers
+from app.schema.auth_schema import Login
 from app.core.security import get_password_hash, verify_password
 
 class UserService:
@@ -12,8 +13,19 @@ class UserService:
 
     async def get_all_user(self) -> list[Users]:
         return await self.repo.get_all()
-
     
+    async def login(self, data: Login) -> list[Users]:
+        user_exist = await self.repo.get_by_mail(data.email)
+        if not user_exist:
+            raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="User does not exist")
+
+        hasp= user_exist[0].password
+        verify = verify_password(data.password,hasp)
+        if not verify:
+            raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED,
+                                detail="Incorrect User Password"
+                                )
+        return user_exist
 
     async def create_user(self, data: CreateUsers) -> Users:
         user_exist = await self.repo.get_by_mail(data.email)

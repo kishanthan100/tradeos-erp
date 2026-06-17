@@ -119,6 +119,7 @@ return (
                 <option value="" disabled>Select a role</option>
                 <option value="admin">Admin</option>
                 <option value="staff">Staff</option>
+                <option value="storekeeper">StoreKeeper</option>
               </select>
             </div>
             

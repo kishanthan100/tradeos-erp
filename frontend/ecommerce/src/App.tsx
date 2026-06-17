@@ -4,6 +4,7 @@ import AddressPage from "./features/address/pages/AddressPage";
 import ProductPage from "./features/stock/pages/ProductPage";
 import CustomerPage from "./features/customers/pages/CustomerPage";
 import UserPage from "./features/users/pages/UserPage";
+import LoginPage from "./features/auth/pages/LoginPage";
 export default function App() {
   return (
     <Routes>
@@ -11,6 +12,7 @@ export default function App() {
       <Route path="/product" element={<ProductPage />} />
       <Route path="/customer" element={<CustomerPage />} />
       <Route path="/user" element={<UserPage />} />
+      <Route path="/login" element={<LoginPage />} />
       
     </Routes>
   );
