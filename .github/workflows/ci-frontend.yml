@@ -8,7 +8,7 @@ on:
       - ".github/workflows/ci-frontend.yml"
 
 env:
-  IMAGE_NAME: ${{ secrets.DOCKER_USERNAME }}/trados-erp/frontend
+  IMAGE_NAME: ${{ secrets.DOCKER_USERNAME }}/trados-erp-frontend
 
 jobs:
   build-and-push:
