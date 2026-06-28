@@ -28,6 +28,8 @@ COPY --from=builder /app/.venv /app/.venv
 
 # Copy application source
 COPY . .
+COPY start.sh .                    
+RUN chmod +x start.sh 
 
 # Make venv binaries available
 ENV PATH="/app/.venv/bin:$PATH"
@@ -39,13 +41,4 @@ ENV PYTHONUNBUFFERED=1
 ENV PYTHONDONTWRITEBYTECODE=1
 
 EXPOSE 8000
-
-# gunicorn manages workers, uvicorn handles ASGI
-# workers = (2 x CPU) + 1 — adjust based on your server
-CMD ["gunicorn", "app.main:app", \
-     "--worker-class", "uvicorn.workers.UvicornWorker", \
-     "--workers", "3", \
-     "--bind", "0.0.0.0:8000", \
-     "--timeout", "120", \
-     "--access-logfile", "-", \
-     "--error-logfile", "-"]
+CMD ["./start.sh"]
