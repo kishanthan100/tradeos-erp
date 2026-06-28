@@ -23,18 +23,18 @@ export interface Category {
 }
 
 export async function getCategories(): Promise<Category[]> {
-  const { data } = await apiClient.get<Category[]>("/stock/get_all_category");
+  const { data } = await apiClient.get<Category[]>("/api/stock/get_all_category");
   return data;
 }
 
 
 export async function getProduct(): Promise<Product[]> {
-  const { data } = await apiClient.get<Product[]>("/stock/get_all_product");
+  const { data } = await apiClient.get<Product[]>("/api/stock/get_all_product");
   return data;
 }
 
 
 export async function createProduct(payload: CreateProductPayload): Promise<Product> {
-  const { data } = await apiClient.post<Product>("/stock/create_product", payload);
+  const { data } = await apiClient.post<Product>("/api/stock/create_product", payload);
   return data;
 }
