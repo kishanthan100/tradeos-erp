@@ -23,7 +23,7 @@ async def create_address(sales_data: CreateSales, product_data: CreateSalesItem 
 
 @router.get("/get_sales", status_code=status.HTTP_200_OK)
 async def get_sales(db: AsyncSession = Depends(get_db)):
-    service = SalesService(db)
+    service = Sales(db)
     return await service.get_all_sales()
 
 
