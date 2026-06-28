@@ -5,6 +5,7 @@ from app.db.session import AsyncSessionLocal
 from app.api.endpoints.customer import customer_route
 from app.api.endpoints.stock import stock_route
 from app.api.endpoints.user import user_route
+from app.api.endpoints.sales import sales_route
 from app.api.endpoints import auth
 from fastapi.middleware.cors import CORSMiddleware
 
@@ -22,6 +23,7 @@ app.include_router(auth.router)
 app.include_router(customer_route.router)
 app.include_router(stock_route.router)
 app.include_router(user_route.router)
+app.include_router(sales_route.router)
 
 
 

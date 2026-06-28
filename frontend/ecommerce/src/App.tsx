@@ -12,7 +12,7 @@ export default function App() {
       <Route path="/product" element={<ProductPage />} />
       <Route path="/customer" element={<CustomerPage />} />
       <Route path="/user" element={<UserPage />} />
-      <Route path="/login" element={<LoginPage />} />
+      <Route path="/" element={<LoginPage />} />
       
     </Routes>
   );

@@ -2,7 +2,7 @@ import axios from "axios";
 
 const apiClient = axios.create({
   baseURL: "/api",
-  withCredentials: true,           // sends your auth cookie
+  withCredentials: true,           
 });
 
 export default apiClient;
