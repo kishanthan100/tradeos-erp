@@ -217,7 +217,7 @@ return (
         <table className="w-full text-sm">
           <thead className="bg-gray-50 border-b border-gray-200">
             <tr>
-              {["Name","Email","is_active","contact_no","created_at"].map((h) => (
+              {["Name","Email","is_active","Role","created_at"].map((h) => (
                 <th key={h} className="px-4 py-2.5 text-left text-xs font-medium text-gray-500 uppercase tracking-wide">
                   {h}
                 </th>

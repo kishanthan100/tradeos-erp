@@ -12,6 +12,7 @@ a migration for that table even if the model file exists.
 from app.model.customer_model import Customers, Address
 from app.model.stock_model import Category, Product
 from app.model.users_model import Users
+from app.model.sales_model import Sales
 
 
 __all__ = [
@@ -20,6 +21,7 @@ __all__ = [
     "Address",
     "Category",
     "Product",
+    "Sales",
     "Users"
     
 ]
