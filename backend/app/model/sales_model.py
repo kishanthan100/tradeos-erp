@@ -43,12 +43,7 @@ class SalesProduct(UUIDMixin, TimestampMixin, Base):
 
     # ── Columns ─────────────────────────────────────────────────────────────
 
-    product_name: Mapped[str] = mapped_column(
-        sa.String(150),
-        nullable=False,
-        unique=False,   # name search / ILIKE queries on product list
-        comment="Product name — must be unique across all products",
-    )
+
     quantity: Mapped[int] = mapped_column(
         sa.Integer,
         nullable=False,
@@ -74,6 +69,13 @@ class SalesProduct(UUIDMixin, TimestampMixin, Base):
         sa.ForeignKey("sales.id", ondelete="RESTRICT"),
         nullable=False,   # WHERE category_id = ? — list products in a category
         comment="FK → sales.id",
+    )
+
+    product_id: Mapped[uuid.UUID] = mapped_column(
+        UUID(as_uuid=True),
+        sa.ForeignKey("products.id", ondelete="RESTRICT"),
+        nullable=False,
+        comment="FK → products.id",
     )
 
     
