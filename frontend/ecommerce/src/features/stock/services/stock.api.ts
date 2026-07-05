@@ -1,11 +1,5 @@
 import apiClient from "@/lib/apiClient";
 
-export interface Product {
-  name: string
-  sku: string
-  is_active: boolean;
-  updated_at: string;
-}
 
 export interface CreateProductPayload {
   name: string
@@ -17,13 +11,38 @@ export interface CreateProductPayload {
   category_id: string;
 }
 
+export interface CreateCategory {
+  name: string
+  country: string
+  description: string
+}
+
+
+export interface Product {
+  name: string
+  sku: string
+  is_active: boolean;
+  updated_at: string;
+}
+
 export interface Category {
   id: string;
   name: string;
+  country: string;
+  description: string;
+  created_at: string;
 }
+
+
+export async function createCategory(payload: CreateCategory): Promise<Category> {
+  const { data } = await apiClient.post<Category>("/api/stock/create_category", payload);
+  return data;
+}
+
 
 export async function getCategories(): Promise<Category[]> {
   const { data } = await apiClient.get<Category[]>("/api/stock/get_all_category");
+  console.log(data);
   return data;
 }
 
