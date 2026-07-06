@@ -1,5 +1,6 @@
 from fastapi import APIRouter, Depends, status, Response , HTTPException
 from sqlalchemy.ext.asyncio import AsyncSession
+from datetime import timedelta
 from typing import Annotated
 from app.core.config import settings
 from app.db.session import get_db
@@ -21,7 +22,9 @@ async def login(data: Login, response: Response, db: AsyncSession = Depends(get_
         raise HTTPException(status_code=401, detail="Invalid Credentials")
     access_token = create_access_token(data={"sub": user[0].email,
                                             "name": user[0].name,
-                                            "role": user[0].role})
+                                            "role": user[0].role},
+                                            expires_delta=timedelta(minutes=settings.ACCESS_TOKEN_EXPIRE_MINUTES)
+                                            )
     response.set_cookie(
         key="access_token", 
         value=access_token, 
@@ -35,7 +38,7 @@ async def login(data: Login, response: Response, db: AsyncSession = Depends(get_
 
 
 
-@router.get("/logout")
+@router.post("/logout")
 async def logout(response: Response):
     response.delete_cookie(key="access_token")
     return {"message": "Logged out successfully"}

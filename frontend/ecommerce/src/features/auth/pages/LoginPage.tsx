@@ -18,7 +18,7 @@ export default function LoginPage() {
   function handleSubmit(e: React.FormEvent) {
   e.preventDefault();
   login(form, {
-    onSuccess: () => navigate("/user"), // ← add this
+    onSuccess: () => navigate("/sales"), // ← add this
   });
 }
 
