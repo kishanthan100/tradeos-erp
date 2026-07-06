@@ -45,11 +45,12 @@ export default function SalesDetailPage() {
           <span className="text-gray-500">Customer Name</span>
           <span className="font-medium text-gray-900">{data.name}</span>
         </div>
+      </div>
+      <div className="bg-white border border-gray-200 rounded-xl p-5 mb-4">
         <div className="flex justify-between text-sm">
           <span className="text-gray-500">Total Amount</span>
           <span className="font-medium text-gray-900">${data.amount.toFixed(2)}</span>
-        </div>
-        
+        </div> 
       </div>
 
       {/* Items */}

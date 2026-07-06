@@ -1,5 +1,5 @@
-import { useMutation,  useQueryClient } from "@tanstack/react-query";
-import { login } from "../services/user.api";
+import { useMutation,  useQueryClient, useQuery } from "@tanstack/react-query";
+import { login, logout , getCurrentUser} from "../services/user.api";
 
 
 export function useLogin() {
@@ -9,5 +9,24 @@ export function useLogin() {
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["user"] });
     },
+  });
+}
+
+
+
+export function useLogout() {
+  return useMutation({
+    mutationFn: logout,
+  });
+}
+
+
+
+
+export function useCurrentUser() {
+  return useQuery({
+    queryKey: ["currentUser"],
+    queryFn: getCurrentUser,
+    retry: false, // don't retry on 401
   });
 }
