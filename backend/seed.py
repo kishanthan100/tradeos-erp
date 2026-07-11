@@ -12,7 +12,7 @@ async def seed():
 
         if not users:
             print("No users found — creating default admin...")
-            admin = User(
+            admin = Users(
                 name=settings.ADMIN_NAME,
                 email=settings.ADMIN_EMAIL,
                 password=get_password_hash(settings.ADMIN_PASSWORD),
