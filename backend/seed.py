@@ -1,7 +1,7 @@
 import asyncio
 from app.db.session import get_db
 from app.model.users_model import Users
-from app.core.security import hash_password
+from app.core.security import get_password_hash
 from sqlalchemy import select
 from app.core.security import settings
 
@@ -15,7 +15,7 @@ async def seed():
             admin = User(
                 name=settings.ADMIN_NAME,
                 email=settings.ADMIN_EMAIL,
-                password=hash_password(settings.ADMIN_PASSWORD),
+                password=get_password_hash(settings.ADMIN_PASSWORD),
                 role=settings.ADMIN_ROLE,
                 is_active=True,
             )
