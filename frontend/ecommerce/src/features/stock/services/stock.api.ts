@@ -21,6 +21,7 @@ export interface CreateCategory {
 export interface Product {
   name: string
   sku: string
+  quantity_in_stock: number
   is_active: boolean;
   updated_at: string;
 }

@@ -225,7 +225,7 @@ export default function ProductPage() {
         <table className="w-full text-sm">
           <thead className="bg-gray-50 border-b border-gray-200">
             <tr>
-              {["Name","sku","is_active","updated_at"].map((h) => (
+              {["Name","sku", "Quantity" ,"is_active","updated_at"].map((h) => (
                 <th key={h} className="px-4 py-2.5 text-left text-xs font-medium text-gray-500 uppercase tracking-wide">
                   {h}
                 </th>
@@ -250,6 +250,7 @@ export default function ProductPage() {
                   
                 </td>
                 <td className="px-4 py-3 text-gray-700">{address.sku}</td>
+                <td className="px-4 py-3 text-gray-700">{address.quantity_in_stock}</td>
                 
                 <td className="px-4 py-3">
                   <span className="text-xs font-medium bg-emerald-50 text-emerald-700 px-2.5 py-1 rounded-full">
