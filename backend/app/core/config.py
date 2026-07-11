@@ -11,6 +11,11 @@ class Settings(BaseSettings):
     ALLOWED_ORIGINS: str
     SECURE: bool
 
+    ADMIN_NAME: str
+    ADMIN_EMAIL: str
+    ADMIN_PASSWORD: str
+    ADMIN_ROLE: str
+
     
 
     class Config:

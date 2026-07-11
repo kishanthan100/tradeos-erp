@@ -4,6 +4,9 @@ set -e
 echo "Running migrations..."
 alembic upgrade head
 
+echo "Seeding initial user..."
+python seed.py 
+
 echo "Starting server..."
 exec gunicorn app.main:app \
      --worker-class uvicorn.workers.UvicornWorker \
