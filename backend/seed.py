@@ -1,13 +1,13 @@
 import asyncio
 from app.db.session import get_db
-from app.models.user import User
+from app.model.users_model import Users
 from app.core.security import hash_password
 from sqlalchemy import select
 from app.core.security import settings
 
 async def seed():
     async for db in get_db():
-        result = await db.execute(select(User))
+        result = await db.execute(select(Users))
         users = result.scalars().all()
 
         if not users:
