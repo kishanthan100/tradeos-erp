@@ -1,9 +1,13 @@
 import { useState } from "react";
+import { Pencil } from "lucide-react";
+import { EditSaleModal } from "../components/EditSalesModal";
 import { useCreateSales, useGetSales } from "../hooks/useSales";
 import type { CreateSales, CreateSalesItem } from "../services/sales.api";
 import { useCustomers } from "../hooks/useCustomer";
 import { useProducts } from "../hooks/useProduct";
 import { Link } from "react-router-dom";
+import { usePageTitle } from "@/hooks/usePageTitle";
+import { useCurrentUser } from "@/features/auth/hooks/useAuth";
 
 
 const emptyItem: CreateSalesItem = {
@@ -26,14 +30,17 @@ function formatDate(iso: string) {
 }
 
 export default function SalesPage() {
+  usePageTitle("Sales");
   const { mutate: createSales, isPending } = useCreateSales();
   const {data: customers} = useCustomers();
   const {data: products} = useProducts();
   const {data, isLoading, error} = useGetSales()
   const [stockWarnings, setStockWarnings] = useState<Record<number, string>>({});
 
-  
-  
+  const { data: currentUser } = useCurrentUser();
+  const isAdmin = currentUser?.user_role === "admin";
+
+  const [editingSaleId, setEditingSaleId] = useState<string | null>(null);
 
   const [showForm, setShowForm]       = useState(false);
   const [showConfirm, setShowConfirm] = useState(false);
@@ -123,7 +130,7 @@ export default function SalesPage() {
           <h1 className="text-lg font-medium text-gray-900">Sales Orders</h1>
           <p className="text-sm text-gray-500 mt-0.5">Create and manage sales orders</p>
         </div>
-        {!showForm && (
+        {!showForm && isAdmin && (
           <button
             onClick={() => setShowForm(true)}
             className="flex items-center gap-1.5 text-sm font-medium bg-gray-900 text-white px-3.5 py-2 rounded-lg hover:bg-gray-700 transition-colors"
@@ -331,14 +338,21 @@ export default function SalesPage() {
                 <td className="px-4 py-3 text-gray-400 text-xs">{formatDate(sales.created_at)}</td>
                 
                 <td className="px-4 py-3">
-                  <button className="text-xs text-gray-500 border border-gray-200 rounded-md px-2.5 py-1.5 hover:bg-gray-100 transition-colors">
-                    Edit
+                  <button
+                    onClick={() => setEditingSaleId(sales.id)}
+                    className="text-gray-400 hover:text-gray-700 hover:bg-gray-100 rounded-md p-1.5 transition-colors"
+                    aria-label="Edit sale"
+                  >
+                    <Pencil size={16} />
                   </button>
                 </td>
               </tr>
             ))}
           </tbody>
         </table>
+        {editingSaleId && (
+          <EditSaleModal saleId={editingSaleId} onClose={() => setEditingSaleId(null)} />
+        )}
       </div>
 
     </div>

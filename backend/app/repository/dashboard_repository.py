@@ -1,6 +1,7 @@
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy import select, func, extract
 from app.model.sales_model import Sales
+from app.model.customer_model import Customers
 
 
 class DashboardRepository:
@@ -14,6 +15,11 @@ class DashboardRepository:
 
     async def get_sales_count(self) -> int:
         stmt = select(func.count(Sales.id))
+        result = await self.db.execute(stmt)
+        return result.scalar_one()
+
+    async def get_customers_count(self) -> int:
+        stmt = select(func.count(Customers.id))
         result = await self.db.execute(stmt)
         return result.scalar_one()
 
@@ -31,3 +37,14 @@ class DashboardRepository:
             {"day": int(row.day), "total_amount": row.total_amount}
             for row in result.all()
         ]
+
+    async def get_top_customers_by_sales(self, limit: int = 5) -> list[dict]:
+        total = func.coalesce(func.sum(Sales.amount), 0).label("total_amount")
+        result = await self.db.execute(
+            select(Customers.id, Customers.name, total)
+            .outerjoin(Sales, Customers.id == Sales.customer_id)
+            .group_by(Customers.id, Customers.name)
+            .order_by(total.desc())
+            .limit(limit)
+        )
+        return [dict(row._mapping) for row in result.all()]

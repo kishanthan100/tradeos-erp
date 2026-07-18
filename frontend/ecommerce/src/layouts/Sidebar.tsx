@@ -1,17 +1,41 @@
 import { useState, useEffect } from "react";
-import { NavLink, useNavigate } from "react-router-dom";
+import { NavLink, useNavigate, useLocation } from "react-router-dom";
+import { ChevronDown } from "lucide-react";
 import { useLogout, useCurrentUser } from "@/features/auth/hooks/useAuth";
 
-const navItems = [
+interface NavItem {
+  label: string;
+  path: string;
+  children?: { label: string; path: string }[];
+}
+
+const navItems: NavItem[] = [
+  { label: "Dashboard", path: "/dashboard" },
   { label: "Sales", path: "/sales" },
   { label: "Users", path: "/user" },
-  { label: "Stock", path: "/stock/product" },
-  { label: "Customers", path: "/customer" },
+  {
+    label: "Stock",
+    path: "/stock/product",
+    children: [
+      { label: "Products", path: "/stock/product" },
+      { label: "Categories", path: "/stock/category" },
+    ],
+  },
+  {
+    label: "Customers",
+    path: "/customer",
+    children: [
+      { label: "All Customers", path: "/customer" },
+      { label: "Addresses", path: "/customer/address" },
+    ],
+  },
 ];
 
 export default function Sidebar() {
   const [open, setOpen] = useState(false);
+  const [expanded, setExpanded] = useState<string[]>([]);
   const navigate = useNavigate();
+  const location = useLocation();
   const { mutate: logoutUser } = useLogout();
   const { data: currentUser, error } = useCurrentUser();
 
@@ -19,6 +43,24 @@ export default function Sidebar() {
   useEffect(() => {
     if (error) navigate("/");
   }, [error]);
+
+  // auto-expand whichever section matches the current route
+  useEffect(() => {
+    const match = navItems.find(
+      (item) =>
+        item.children &&
+        item.children.some((child) => location.pathname.startsWith(child.path))
+    );
+    if (match && !expanded.includes(match.path)) {
+      setExpanded((prev) => [...prev, match.path]);
+    }
+  }, [location.pathname]);
+
+  function toggleExpanded(path: string) {
+    setExpanded((prev) =>
+      prev.includes(path) ? prev.filter((p) => p !== path) : [...prev, path]
+    );
+  }
 
   function handleLogout() {
     logoutUser(undefined, {
@@ -60,23 +102,74 @@ export default function Sidebar() {
         </div>
 
         {/* Nav */}
-        <nav className="flex-1 px-3 py-4 space-y-1">
-          {navItems.map((item) => (
-            <NavLink
-              key={item.path}
-              to={item.path}
-              onClick={() => setOpen(false)}
-              className={({ isActive }) =>
-                `block px-3 py-2 rounded-lg text-sm transition-colors ${
-                  isActive
-                    ? "bg-gray-900 text-white font-medium"
-                    : "text-gray-600 hover:bg-gray-100"
-                }`
-              }
-            >
-              {item.label}
-            </NavLink>
-          ))}
+        <nav className="flex-1 px-3 py-4 space-y-1 overflow-y-auto">
+          {navItems.map((item) => {
+            if (!item.children) {
+              return (
+                <NavLink
+                  key={item.path}
+                  to={item.path}
+                  onClick={() => setOpen(false)}
+                  className={({ isActive }) =>
+                    `block px-3 py-2 rounded-lg text-sm transition-colors ${
+                      isActive
+                        ? "bg-gray-900 text-white font-medium"
+                        : "text-gray-600 hover:bg-gray-100"
+                    }`
+                  }
+                >
+                  {item.label}
+                </NavLink>
+              );
+            }
+
+            const isExpanded = expanded.includes(item.path);
+            const isParentActive = item.children.some((child) =>
+              location.pathname.startsWith(child.path)
+            );
+
+            return (
+              <div key={item.path}>
+                <button
+                  onClick={() => toggleExpanded(item.path)}
+                  className={`w-full flex items-center justify-between px-3 py-2 rounded-lg text-sm transition-colors ${
+                    isParentActive
+                      ? "text-gray-900 font-medium"
+                      : "text-gray-600 hover:bg-gray-100"
+                  }`}
+                >
+                  {item.label}
+                  <ChevronDown
+                    className={`w-4 h-4 transition-transform ${
+                      isExpanded ? "rotate-180" : ""
+                    }`}
+                  />
+                </button>
+
+                {isExpanded && (
+                  <div className="mt-1 ml-3 pl-3 border-l border-gray-200 space-y-1">
+                    {item.children.map((child) => (
+                      <NavLink
+                        key={child.path}
+                        to={child.path}
+                        onClick={() => setOpen(false)}
+                        end
+                        className={({ isActive }) =>
+                          `block px-3 py-1.5 rounded-lg text-sm transition-colors ${
+                            isActive
+                              ? "bg-gray-900 text-white font-medium"
+                              : "text-gray-500 hover:bg-gray-100"
+                          }`
+                        }
+                      >
+                        {child.label}
+                      </NavLink>
+                    ))}
+                  </div>
+                )}
+              </div>
+            );
+          })}
         </nav>
 
         {/* User + Logout */}

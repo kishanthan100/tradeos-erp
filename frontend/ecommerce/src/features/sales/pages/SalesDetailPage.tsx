@@ -1,7 +1,10 @@
 import { useParams, useNavigate } from "react-router-dom";
 import { useSalesDetails } from "../hooks/useSalesDetails";
+import { usePageTitle } from "@/hooks/usePageTitle";
 
 export default function SalesDetailPage() {
+  usePageTitle("Sales Detail");
+  
   const { id } = useParams<{ id: string }>();
   const navigate = useNavigate();
   const { data, isLoading, error } = useSalesDetails(id!);

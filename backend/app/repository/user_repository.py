@@ -1,7 +1,7 @@
 from re import A
 from sqlalchemy import select
 from sqlalchemy.ext.asyncio import AsyncSession
-
+from app.schema.user_schema import UserSummary
 from app.model.users_model import Users
 
 
@@ -10,9 +10,23 @@ class UserRepository:
     def __init__(self, db: AsyncSession):
         self.db = db
 
-    async def get_all(self) -> list[Users]:
-        result = await self.db.execute(select(Users))
-        return list(result.scalars().all())
+    async def get_all(self) -> list[UserSummary]:
+        result = await self.db.execute(
+            select(
+                Users.id,
+                Users.name,
+                Users.role,
+                Users.email,
+                Users.created_at,
+                Users.is_active,
+            )
+        )
+        rows = result.mappings().all()
+        return [UserSummary(**row) for row in rows]
+
+
+
+        
 
     async def get_by_mail(self, email: str) -> Users:
         result = await self.db.execute(select(Users).where(Users.email == email))

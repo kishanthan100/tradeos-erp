@@ -40,6 +40,8 @@ export interface Sales {
 
 
 export interface SalesItem {
+  product_id: string; 
+  id: string;
   sku: string;        // from Product
   quantity: number;
   unit_price: number;
@@ -47,11 +49,32 @@ export interface SalesItem {
 }
 
 export interface SalesDetail {
+  sales_id: string;
+  sales_name: string;
   name: string;
   amount: number;
   created_at: string;
   items: SalesItem[];
 }
+
+
+export interface SaleItemUpdatePayload {
+  product_id: string;
+  sku: string;
+  additional_quantity: number;
+}
+
+export interface SaleUpdateRequest {
+  items: SaleItemUpdatePayload[];
+}
+
+export interface SaleUpdateResponse {
+  sales_id: string;
+  amount: number;
+  items: SalesItem[];
+}
+
+
 // ── API ───────────────────────────────────────────────────────────────────────
 
 export async function createSales(payload: CreateSales): Promise<void> {
@@ -83,4 +106,17 @@ export async function getSalesDetail(sales_id: string): Promise<SalesDetail> {
   const { data } = await apiClient.get<SalesDetail>(`/api/sales/get_sales_detail/${sales_id}`);
   console.log("getting sales detail:", JSON.stringify(data, null, 2));
   return data;
+}
+
+
+export async function updateSaleItems(
+    salesId: string,
+    payload: SaleUpdateRequest
+  ): Promise<SaleUpdateResponse> {
+    const { data } = await apiClient.patch<SaleUpdateResponse>(
+      `api/sales/update-items/${salesId}`,
+      payload
+    );
+    console.log("updating sale items:", JSON.stringify(data, null, 2));
+    return data;
 }

@@ -2,6 +2,7 @@ import { useState } from "react";
 import { useProduct, useCreateProduct } from "../hooks/useStock";
 import type { CreateProductPayload } from "../services/stock.api";
 import { useCategories } from "../hooks/useCategory";
+import { usePageTitle } from "@/hooks/usePageTitle";
 
 
 const empty: CreateProductPayload = {
@@ -22,6 +23,7 @@ function formatDate(iso: string) {
 }
 
 export default function ProductPage() {
+  usePageTitle("Products");
   const { data, isLoading, error } = useProduct();
   const { mutate: createProduct, isPending } = useCreateProduct();
   const {data: categories} = useCategories()

@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { useCustomer, useCreateCustomer, useGetAddress } from "@/features/customers/hooks/useCustomer";
 import type { CreateCustomerPayload } from "../services/customer.api";
+import { usePageTitle } from "@/hooks/usePageTitle";
 
 
 const empty: CreateCustomerPayload = {
@@ -20,6 +21,8 @@ function formatDate(iso: string) {
 
 
 export default function CustomerPage() {
+  usePageTitle("Customers");
+  
   const { data, isLoading, error } = useCustomer();
   const { mutate: createCustomer, isPending } = useCreateCustomer();
   const {data: address} = useGetAddress()
@@ -130,7 +133,7 @@ return (
                 <option value="">Select a Address ID</option>
                 {address?.map((addr) => (
                   <option key={addr.id} value={addr.id}>
-                    {addr.created_at}            
+                    {addr.id}            
                   </option>                
                 ))}
               </select>
