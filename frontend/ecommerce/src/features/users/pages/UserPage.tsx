@@ -2,6 +2,7 @@ import { useState } from "react";
 
 import { UseUser, useCreateUser } from "../hooks/useUsers";
 import type { CreateUserPayload } from "../services/user.api";
+import { usePageTitle } from "@/hooks/usePageTitle";
 
 
 const empty: CreateUserPayload = {
@@ -21,6 +22,8 @@ function formatDate(iso: string) {
 
 
 export default function UserPage() {
+  usePageTitle("Users");
+  
   const { data, isLoading, error } = UseUser();
   const { mutate: createUser, isPending } = useCreateUser();
   
@@ -120,6 +123,7 @@ return (
                 <option value="admin">Admin</option>
                 <option value="staff">Staff</option>
                 <option value="storekeeper">StoreKeeper</option>
+                <option value="storekeeper">SalesAgent</option>
               </select>
             </div>
             

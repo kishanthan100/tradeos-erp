@@ -3,9 +3,11 @@ from typing import Annotated
 from app.core.config import settings
 import jwt
 from jwt.exceptions import InvalidTokenError
-from fastapi import HTTPException, status, Request
+from fastapi import HTTPException, status, Request, Depends
 from jwt.exceptions import InvalidTokenError
 from pwdlib import PasswordHash
+from app.schema.auth_schema import CurrentUser
+
 
 
 
@@ -51,8 +53,17 @@ async def get_current_user(request: Request):
             raise credentials_exception
     except InvalidTokenError:
         raise credentials_exception
-    return {"user_name": user_name,
-            "user_email": user_email,
-            "user_role": user_role
-            }
+    return CurrentUser(
+        user_name=user_name,
+        user_email=user_email,
+        user_role=user_role,
+    )
     
+
+async def require_admin(current_user: CurrentUser = Depends(get_current_user)) -> CurrentUser:
+    if current_user.user_role != "admin":
+        raise HTTPException(
+            status_code=status.HTTP_403_FORBIDDEN,
+            detail="Admin access required",
+        )
+    return current_user

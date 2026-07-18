@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { useCategories, useCreateCategory } from "../hooks/useCategory";
 import type { CreateCategory } from "../services/stock.api";
+import { usePageTitle } from "@/hooks/usePageTitle";
 
 const empty: CreateCategory = {
   name: "",
@@ -15,6 +16,8 @@ function formatDate(iso: string) {
 }
 
 export default function AddressPage() {
+  usePageTitle("Categories");
+  
   const { data, isLoading, error } = useCategories();
   const { mutate: createCategory, isPending } = useCreateCategory();
 

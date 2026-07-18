@@ -8,22 +8,27 @@ import LoginPage from "./features/auth/pages/LoginPage";
 import SalesPage from "./features/sales/pages/SalesPage";
 import CategoryPage from "./features/stock/pages/CategoryPage";
 import SalesDetailPage from "./features/sales/pages/SalesDetailPage";
+import DashboardPage from "./features/dashboard/pages/DashboardPage";
 
 export default function App() {
   return (
     <Routes>
       {/* Public */}
       <Route path="/" element={<LoginPage />} />
+      
+      
 
       {/* Protected — all wrapped with sidebar */}
       <Route element={<MainLayout />}>
-        <Route path="/sales" element={<SalesPage />} />
+        
         <Route path="/sales/:id" element={<SalesDetailPage />} />
         <Route path="/user" element={<UserPage />} />
         <Route path="/customer" element={<CustomerPage />} />
         <Route path="/customer/address" element={<AddressPage />} />
         <Route path="/stock/product" element={<ProductPage />} />
         <Route path="/stock/category" element={<CategoryPage />} />
+        <Route path="/dashboard" element={<DashboardPage />} />
+        <Route path="/sales" element={<SalesPage />} />
       </Route>
     </Routes>
   );

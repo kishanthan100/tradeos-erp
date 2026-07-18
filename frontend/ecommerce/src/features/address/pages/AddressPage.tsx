@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { useAddress, useCreateAddress } from "../hooks/useAddress";
 import type { CreateAddressPayload } from "../services/address.api";
+import { usePageTitle } from "@/hooks/usePageTitle";
 
 const empty: CreateAddressPayload = {
   no: "",
@@ -16,6 +17,8 @@ function formatDate(iso: string) {
 }
 
 export default function AddressPage() {
+  usePageTitle("Address");
+
   const { data, isLoading, error } = useAddress();
   const { mutate: createAddress, isPending } = useCreateAddress();
 

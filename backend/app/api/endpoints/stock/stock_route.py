@@ -4,18 +4,22 @@ from sqlalchemy.ext.asyncio import AsyncSession
 from app.db.session import get_db
 from app.schema.stock_schema import CreateCategory,CreateProduct
 from app.service.stock_service import CategoryService, ProductService
+from app.core.security import get_current_user
+
 
 router = APIRouter(prefix="/api/stock", tags=["Stock"])
 
 
 ####################CATEGORY###################
 @router.post("/create_category", status_code=status.HTTP_201_CREATED)
-async def create_address(data: CreateCategory, db: AsyncSession = Depends(get_db)):
+async def create_address(data: CreateCategory, db: AsyncSession = Depends(get_db),
+                        current_user: str = Depends(get_current_user)):
     service = CategoryService(db)
     return await service.create_category(data)
 
 @router.get("/get_all_category")
-async def get_all_category(db: AsyncSession = Depends(get_db)):
+async def get_all_category(db: AsyncSession = Depends(get_db),
+                            current_user: str = Depends(get_current_user)):
     service = CategoryService(db)
     return await service.get_all_category()
 
@@ -24,12 +28,14 @@ async def get_all_category(db: AsyncSession = Depends(get_db)):
 
 ####################PRODUCT###################
 @router.post("/create_product", status_code=status.HTTP_201_CREATED)
-async def create_address(data: CreateProduct, db: AsyncSession = Depends(get_db)):
+async def create_address(data: CreateProduct, db: AsyncSession = Depends(get_db),
+                        current_user: str = Depends(get_current_user)):
     service = ProductService(db)
     return await service.create_product(data)
 
 
 @router.get("/get_all_product")
-async def get_product(db: AsyncSession = Depends(get_db)):
+async def get_product(db: AsyncSession = Depends(get_db),
+                        current_user: str = Depends(get_current_user)):
     service = ProductService(db)
     return await service.get_all_product()

@@ -21,6 +21,7 @@ export interface CreateCustomerPayload {
 export interface Address {
   id: string
   created_at: string
+  city: string
   
 }
 

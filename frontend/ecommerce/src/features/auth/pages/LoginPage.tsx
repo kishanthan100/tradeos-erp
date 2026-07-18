@@ -18,7 +18,7 @@ export default function LoginPage() {
   function handleSubmit(e: React.FormEvent) {
   e.preventDefault();
   login(form, {
-    onSuccess: () => navigate("/sales"), // ← add this
+    onSuccess: () => navigate("/dashboard"), // ← add this
   });
 }
 
@@ -33,7 +33,7 @@ export default function LoginPage() {
           </svg>
         </div>
 
-        <h1 className="text-lg font-medium text-gray-900 mb-1">Welcome back</h1>
+        <h1 className="text-lg font-medium text-gray-900 mb-1">TRADE OS</h1>
         <p className="text-sm text-gray-500 mb-6">Sign in to your account to continue</p>
 
         {/* Error */}
